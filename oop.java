@@ -16,4 +16,10 @@ public class oop {
     public String getName (){
         return name;
     }
+    public int getAge(){
+        return age;
+    }
+    public double getCgpa (){
+        return cgpa;
+    }
 }
