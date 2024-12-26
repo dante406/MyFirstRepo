@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Driver {
+public class Driver_Account {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Account ac1 = new Account();
@@ -17,5 +17,11 @@ public class Driver {
         ac1.setBalnce(ac1.withdraw(2500));
         System.out.println("After withdraw new Balance: "+ ac1.getbalance());
         // System.out.println("After withdraw new Balance: "+ ac1.withdraw(2500));
+        System.out.println("Current Balance: "+ac1.getbalance());
+        ac1.setBalnce(ac1.deposit(3000));
+        System.out.println("After withdraw new Balance: "+ ac1.getbalance());
+        //getMonthlyInterestAmount
+        double interestAmount = ac1.getMonthlyInterestAmount();
+        System.out.println("Monthly Interest Amount: " + interestAmount);
     }
 }
