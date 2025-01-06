@@ -27,7 +27,7 @@ class Student {
     public String getStudentName(){
         return studentName;
     }
-
+    
     public void addCourse(Course course) {
         courseList.add(course);
     }
@@ -68,7 +68,13 @@ class Course {
     public String getCourseId() {
         return courseId;
     }
-
+    public Faculty getFaculty() {
+        return faculty;
+    }
+    
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
     public String getCourseTitle() {
         return courseTitle;
     }
@@ -84,7 +90,27 @@ class Course {
     public void addFaculty(Faculty faculty) {
         this.faculty = faculty;
     }
-
+    
+    
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
+    }
+    
+    
+   
+    
+    public void setCourseTitle(String courseTitle) {
+        this.courseTitle = courseTitle;
+    }
+    
+    
+    public double getCredit() {
+        return credit;
+    }
+    
+    public void setCredit(double credit) {
+        this.credit = credit;
+    }
     public void dropFaculty() {
         this.faculty = null;
     }
@@ -119,11 +145,31 @@ class Faculty {
         this.facultyName = facultyName;
         this.facultyPosition = facultyPosition;
     }
-
+    public int getFacultyId() {
+        return facultyId;
+    }
+    
+    public void setFacultyId(int facultyId) {
+        this.facultyId = facultyId;
+    }
+    
+ 
     public String getFacultyName() {
         return facultyName;
     }
-
+    
+    public void setFacultyName(String facultyName) {
+        this.facultyName = facultyName;
+    }
+    
+    // Getter and Setter for facultyPosition
+    public String getFacultyPosition() {
+        return facultyPosition;
+    }
+    
+    public void setFacultyPosition(String facultyPosition) {
+        this.facultyPosition = facultyPosition;
+    }
     public void display() {
         System.out.println("Faculty ID: " + facultyId);
         System.out.println("Faculty Name: " + facultyName);
@@ -287,8 +333,53 @@ public class MenuApplication {
                 // double credit = Double.parseDouble(scanner.nextLine());
                 // courses.add(new Course(courseId, courseTitle, credit));
                 // System.out.println("Course added successfully.");
-                System.out.println("coming");
-                break;
+                
+                
+            System.out.print("Enter Course ID: ");
+            String courseIdToUpdate = scanner.nextLine();
+            boolean courseFound = false;
+
+            for (Course course : courses) {
+                if (course.getCourseId().equals(courseIdToUpdate)) {
+                    courseFound = true;
+
+            System.out.print("Enter updated Course Title: ");
+            String courseTitle = scanner.nextLine();
+
+            System.out.print("Enter updated Credit: ");
+            double credit = Double.parseDouble(scanner.nextLine());
+
+            System.out.print("Enter updated Faculty ID for this course: ");
+            int facultyId = Integer.parseInt(scanner.nextLine());
+            Faculty assignedFaculty = null;
+
+            for (Faculty faculty : faculties) {
+                if (faculty.getFacultyId() == facultyId) {
+                    assignedFaculty = faculty;
+                    break;
+                }
+            }
+
+            if (assignedFaculty == null) {
+                System.out.println("Faculty with ID " + facultyId + " not found.");
+            } else {
+                course.setCourseTitle(courseTitle);
+                course.setCredit(credit);
+                course.setFaculty(assignedFaculty);
+
+                System.out.println("Course information updated successfully.");
+            }
+            break; // Exit the loop once the course is found and updated
+                 }
+        }   
+
+    if (!courseFound) {
+        System.out.println("Course with ID " + courseIdToUpdate + " not found.");
+    }
+    break;
+
+
+                
             case "c":
                 // System.out.print("Enter Faculty ID: ");
                 // int facultyId = Integer.parseInt(scanner.nextLine());
@@ -298,8 +389,32 @@ public class MenuApplication {
                 // String facultyPosition = scanner.nextLine();
                 // faculties.add(new Faculty(facultyId, facultyName, facultyPosition));
                 // System.out.println("Faculty added successfully.");
-                System.out.println("coming");
-                break;
+                System.out.print("Enter Faculty ID: ");
+                int facultyIdToUpdate = Integer.parseInt(scanner.nextLine());
+                boolean facultyFound = false;
+
+                for (Faculty faculty : faculties) {
+                    if (faculty.getFacultyId() == facultyIdToUpdate) {
+                         facultyFound = true;
+
+                System.out.print("Enter updated Faculty Name: ");
+                String facultyName = scanner.nextLine();
+
+                System.out.print("Enter updated Faculty Position: ");
+                String facultyPosition = scanner.nextLine();
+
+                faculty.setFacultyName(facultyName);
+                faculty.setFacultyPosition(facultyPosition);
+
+            System.out.println("Faculty information updated successfully.");
+            break; // Exit the loop once the faculty is found and updated
+        }
+    }
+
+    if (!facultyFound) {
+        System.out.println("Faculty with ID " + facultyIdToUpdate + " not found.");
+    }
+    break;
             default:
                 System.out.println("Invalid choice! Try again.");
         }
