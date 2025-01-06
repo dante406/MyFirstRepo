@@ -1,52 +1,27 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-class Student {
-    private int studentId;
-    private String studentName;
-    private double studentCGPA;
-    private ArrayList<Course> courseList = new ArrayList<>();
+class Faculty {
+    private int facultyId;
+    private String facultyName;
+    private String facultyPosition;
 
-    public Student() {}
-
-    public Student(int studentId, String studentName, double studentCGPA) {
-        this.studentId = studentId;
-        this.studentName = studentName;
-        this.studentCGPA = studentCGPA;
-    }
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
-    }
-    public void setStudentCgpa(double studentCGPA){
-        this.studentCGPA = studentCGPA;
+    public Faculty(int facultyId, String facultyName, String facultyPosition) {
+        this.facultyId = facultyId;
+        this.facultyName = facultyName;
+        this.facultyPosition = facultyPosition;
     }
 
-    public int getStudentId() {
-        return studentId;
-    }
-    public String getStudentName(){
-        return studentName;
-    }
-    
-    public void addCourse(Course course) {
-        courseList.add(course);
+    public int getFacultyId() {
+        return facultyId;
     }
 
-    public void dropCourse(Course course) {
-        courseList.remove(course);
+    public String getFacultyName() {
+        return facultyName;
     }
 
-    public void display() {
-        System.out.println("Student ID: " + studentId);
-        System.out.println("Student Name: " + studentName);
-        System.out.println("Student CGPA: " + studentCGPA);
-    }
-
-    public void printCourseList() {
-        System.out.println("Courses taken by " + studentName + ":");
-        for (Course course : courseList) {
-            System.out.println(course.getCourseTitle());
-        }
+    public String getFacultyPosition() {
+        return facultyPosition;
     }
 }
 
@@ -55,9 +30,7 @@ class Course {
     private String courseTitle;
     private double credit;
     private ArrayList<Student> studentList = new ArrayList<>();
-    private Faculty faculty;
-
-    public Course() {}
+    private Faculty courseFaculty;
 
     public Course(String courseId, String courseTitle, double credit) {
         this.courseId = courseId;
@@ -68,133 +41,103 @@ class Course {
     public String getCourseId() {
         return courseId;
     }
-    public Faculty getFaculty() {
-        return faculty;
-    }
-    
-    public void setFaculty(Faculty faculty) {
-        this.faculty = faculty;
-    }
+
     public String getCourseTitle() {
         return courseTitle;
     }
 
+    public void setFaculty(Faculty faculty) {
+        this.courseFaculty = faculty;
+    }
+
     public void addStudent(Student student) {
         studentList.add(student);
+        student.enrollInCourse(this); // Automatically update student's course list
     }
 
-    public void dropStudent(int studentId) {
-        studentList.removeIf(student -> student.getStudentId() == studentId);
-    }
-
-    public void addFaculty(Faculty faculty) {
-        this.faculty = faculty;
-    }
-    
-    
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
-    }
-    
-    
-   
-    
-    public void setCourseTitle(String courseTitle) {
-        this.courseTitle = courseTitle;
-    }
-    
-    
-    public double getCredit() {
-        return credit;
-    }
-    
-    public void setCredit(double credit) {
-        this.credit = credit;
-    }
-    public void dropFaculty() {
-        this.faculty = null;
-    }
-
-    public void printStudentList() {
-        System.out.println("Students enrolled in " + courseTitle + ":");
-        for (Student student : studentList) {
-            System.out.println(student.getStudentId() + " - " + student.getStudentName());
-        }
-    }
-
-    public void display() {
+    public void printCourseDetails() {
         System.out.println("Course ID: " + courseId);
         System.out.println("Course Title: " + courseTitle);
         System.out.println("Credit: " + credit);
-        if (faculty != null) {
-            System.out.println("Faculty: " + faculty.getFacultyName());
+        if (courseFaculty != null) {
+            System.out.println("Faculty Assigned: " + courseFaculty.getFacultyName() + " (" + courseFaculty.getFacultyPosition() + ")");
+        } else {
+            System.out.println("No faculty assigned to this course.");
         }
-        else System.out.println("No Faculty has been assigned yet");
+
+        System.out.println("Students enrolled in this course:");
+        if (studentList.isEmpty()) {
+            System.out.println("  No students enrolled.");
+        } else {
+            for (Student student : studentList) {
+                System.out.println("  " + student.getStudentName());
+            }
+        }
     }
 }
 
-class Faculty {
-    private int facultyId;
-    private String facultyName;
-    private String facultyPosition;
+class Student {
+    private int studentId;
+    private String studentName;
+    private double studentCGPA;
+    private ArrayList<Course> courseList = new ArrayList<>();
 
-    public Faculty() {}
+    public Student(int studentId, String studentName, double studentCGPA) {
+        this.studentId = studentId;
+        this.studentName = studentName;
+        this.studentCGPA = studentCGPA;
+    }
 
-    public Faculty(int facultyId, String facultyName, String facultyPosition) {
-        this.facultyId = facultyId;
-        this.facultyName = facultyName;
-        this.facultyPosition = facultyPosition;
+    public int getStudentId() {
+        return studentId;
     }
-    public int getFacultyId() {
-        return facultyId;
+
+    public String getStudentName() {
+        return studentName;
     }
-    
-    public void setFacultyId(int facultyId) {
-        this.facultyId = facultyId;
+
+    public double getStudentCgpa() {
+        return studentCGPA;
     }
-    
- 
-    public String getFacultyName() {
-        return facultyName;
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
-    
-    public void setFacultyName(String facultyName) {
-        this.facultyName = facultyName;
+
+    public void setStudentCgpa(double studentCGPA) {
+        this.studentCGPA = studentCGPA;
     }
-    
-    // Getter and Setter for facultyPosition
-    public String getFacultyPosition() {
-        return facultyPosition;
+
+    public void enrollInCourse(Course course) {
+        courseList.add(course);
     }
-    
-    public void setFacultyPosition(String facultyPosition) {
-        this.facultyPosition = facultyPosition;
+
+    public void dropCourse(Course course) {
+        courseList.remove(course);
     }
-    public void display() {
-        System.out.println("Faculty ID: " + facultyId);
-        System.out.println("Faculty Name: " + facultyName);
-        System.out.println("Faculty Position: " + facultyPosition);
+
+    public void printCourses() {
+        System.out.println("Courses taken by " + studentName + ":");
+        if (courseList.isEmpty()) {
+            System.out.println("  No courses enrolled.");
+        } else {
+            for (Course course : courseList) {
+                System.out.println("  " + course.getCourseTitle() + " (Course ID: " + course.getCourseId() + ")");
+            }
+        }
     }
 }
 
 public class MenuApplication {
-    private static ArrayList<Student> students = new ArrayList<>();
-    private static ArrayList<Course> courses = new ArrayList<>();
-    private static ArrayList<Faculty> faculties = new ArrayList<>();
-    private static Scanner scanner = new Scanner(System.in);
+    static ArrayList<Student> students = new ArrayList<>();
+    static ArrayList<Course> courses = new ArrayList<>();
+    static ArrayList<Faculty> faculties = new ArrayList<>();
+    static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         while (true) {
-            System.out.println("Menu:");
-            System.out.println("a. Add");
-            System.out.println("b. Delete");
-            System.out.println("c. Update");
-            System.out.println("d. Print");
-            System.out.println("e. Search");
-            System.out.println("f. Exit");
-            System.out.print("Choose an option: ");
+            showMenu();
             String choice = scanner.nextLine();
-
             switch (choice) {
                 case "a":
                     addEntity();
@@ -212,12 +155,23 @@ public class MenuApplication {
                     searchEntity();
                     break;
                 case "f":
-                    System.out.println("Exiting...");
+                    System.out.println("Exiting program.");
                     return;
                 default:
-                    System.out.println("Invalid choice! Try again.");
+                    System.out.println("Invalid option. Try again.");
             }
         }
+    }
+
+    private static void showMenu() {
+        System.out.println("Menu:");
+        System.out.println("a. Add");
+        System.out.println("b. Delete");
+        System.out.println("c. Update");
+        System.out.println("d. Print");
+        System.out.println("e. Search");
+        System.out.println("f. Exit");
+        System.out.print("Choose an option: ");
     }
 
     private static void addEntity() {
@@ -246,17 +200,55 @@ public class MenuApplication {
                 String courseTitle = scanner.nextLine();
                 System.out.print("Enter Course Credit: ");
                 double credit = Double.parseDouble(scanner.nextLine());
-                courses.add(new Course(courseId, courseTitle, credit));
+                Course newCourse = new Course(courseId, courseTitle, credit);
+
+                // Add Faculty to Course
+                System.out.print("Enter Faculty ID to assign: ");
+                int facultyId = Integer.parseInt(scanner.nextLine());
+                Faculty assignedFaculty = null;
+                for (Faculty faculty : faculties) {
+                    if (faculty.getFacultyId() == facultyId) {
+                        assignedFaculty = faculty;
+                        break;
+                    }
+                }
+                if (assignedFaculty != null) {
+                    newCourse.setFaculty(assignedFaculty);
+                } else {
+                    System.out.println("No faculty found with ID " + facultyId);
+                }
+
+                // Enroll Students to Course
+                System.out.print("Enter number of students to enroll in this course: ");
+                int numStudents = Integer.parseInt(scanner.nextLine());
+                for (int i = 0; i < numStudents; i++) {
+                    System.out.print("Enter Student ID to enroll: ");
+                    int studentIdToEnroll = Integer.parseInt(scanner.nextLine());
+                    Student enrolledStudent = null;
+                    for (Student student : students) {
+                        if (student.getStudentId() == studentIdToEnroll) {
+                            enrolledStudent = student;
+                            break;
+                        }
+                    }
+                    if (enrolledStudent != null) {
+                        newCourse.addStudent(enrolledStudent);
+                    } else {
+                        System.out.println("No student found with ID " + studentIdToEnroll);
+                    }
+                }
+
+                courses.add(newCourse);
                 System.out.println("Course added successfully.");
                 break;
             case "c":
                 System.out.print("Enter Faculty ID: ");
-                int facultyId = Integer.parseInt(scanner.nextLine());
+                int facultyIdToAdd = Integer.parseInt(scanner.nextLine());
                 System.out.print("Enter Faculty Name: ");
                 String facultyName = scanner.nextLine();
                 System.out.print("Enter Faculty Position: ");
                 String facultyPosition = scanner.nextLine();
-                faculties.add(new Faculty(facultyId, facultyName, facultyPosition));
+                faculties.add(new Faculty(facultyIdToAdd, facultyName, facultyPosition));
                 System.out.println("Faculty added successfully.");
                 break;
             default:
@@ -275,20 +267,20 @@ public class MenuApplication {
         switch (choice) {
             case "a":
                 System.out.print("Enter Student ID to delete: ");
-                int studentId = Integer.parseInt(scanner.nextLine());
-                students.removeIf(student -> student.getStudentId() == studentId);
+                int studentIdToDelete = Integer.parseInt(scanner.nextLine());
+                students.removeIf(student -> student.getStudentId() == studentIdToDelete);
                 System.out.println("Student deleted successfully.");
                 break;
             case "b":
                 System.out.print("Enter Course ID to delete: ");
-                String courseId = scanner.nextLine();
-                courses.removeIf(course -> course.getCourseId().equals(courseId));
+                String courseIdToDelete = scanner.nextLine();
+                courses.removeIf(course -> course.getCourseId().equals(courseIdToDelete));
                 System.out.println("Course deleted successfully.");
                 break;
             case "c":
                 System.out.print("Enter Faculty ID to delete: ");
-                int facultyId = Integer.parseInt(scanner.nextLine());
-                faculties.removeIf(faculty -> faculty.getFacultyName().equals(String.valueOf(facultyId)));
+                int facultyIdToDelete = Integer.parseInt(scanner.nextLine());
+                faculties.removeIf(faculty -> faculty.getFacultyId() == facultyIdToDelete);
                 System.out.println("Faculty deleted successfully.");
                 break;
             default:
@@ -308,113 +300,60 @@ public class MenuApplication {
             case "a":
                 System.out.print("Enter Student ID: ");
                 int studentIdToUpdate = Integer.parseInt(scanner.nextLine());
-                boolean studentFound = false;
-                for(Student student : students){
-                    if(student.getStudentId() == studentIdToUpdate){
-                        studentFound = true;
-                        System.out.print("Enter updated Student Name: ");
-                        String studentName = scanner.nextLine();
-                        System.out.print("Enter Student CGPA: ");
-                        double studentCGPA = Double.parseDouble(scanner.nextLine());
-                        student.setStudentName(studentName);
-                        student.setStudentCgpa(studentCGPA);
-                        System.out.println("Student information updated successfully.");
+                System.out.print("Enter new name: ");
+                String studentNameToUpdate = scanner.nextLine();
+                System.out.print("Enter new CGPA: ");
+                double studentCGPAtoUpdate = Double.parseDouble(scanner.nextLine());
+                for (Student student : students) {
+                    if (student.getStudentId() == studentIdToUpdate) {
+                        student.setStudentName(studentNameToUpdate);
+                        student.setStudentCgpa(studentCGPAtoUpdate);
+                        System.out.println("Student updated successfully.");
                     }
-                    else System.out.println("Couldn't found the student");
                 }
                 break;
-     
             case "b":
-                // System.out.print("Enter Course ID: ");
-                // String courseId = scanner.nextLine();
-                // System.out.print("Enter Course Title: ");
-                // String courseTitle = scanner.nextLine();
-                // System.out.print("Enter Course Credit: ");
-                // double credit = Double.parseDouble(scanner.nextLine());
-                // courses.add(new Course(courseId, courseTitle, credit));
-                // System.out.println("Course added successfully.");
-                
-                
-            System.out.print("Enter Course ID: ");
-            String courseIdToUpdate = scanner.nextLine();
-            boolean courseFound = false;
-
-            for (Course course : courses) {
-                if (course.getCourseId().equals(courseIdToUpdate)) {
-                    courseFound = true;
-
-            System.out.print("Enter updated Course Title: ");
-            String courseTitle = scanner.nextLine();
-
-            System.out.print("Enter updated Credit: ");
-            double credit = Double.parseDouble(scanner.nextLine());
-
-            System.out.print("Enter updated Faculty ID for this course: ");
-            int facultyId = Integer.parseInt(scanner.nextLine());
-            Faculty assignedFaculty = null;
-
-            for (Faculty faculty : faculties) {
-                if (faculty.getFacultyId() == facultyId) {
-                    assignedFaculty = faculty;
-                    break;
+                System.out.print("Enter Course ID: ");
+                String courseIdToUpdate = scanner.nextLine();
+                System.out.print("Enter new Course Title: ");
+                String courseTitleToUpdate = scanner.nextLine();
+                System.out.print("Enter new Credit: ");
+                double courseCreditToUpdate = Double.parseDouble(scanner.nextLine());
+                for (Course course : courses) {
+                    if (course.getCourseId().equals(courseIdToUpdate)) {
+                        course.setFaculty(null); // Remove current faculty
+                        System.out.print("Enter Faculty ID to assign: ");
+                        int facultyIdToAssign = Integer.parseInt(scanner.nextLine());
+                        Faculty assignedFaculty = null;
+                        for (Faculty faculty : faculties) {
+                            if (faculty.getFacultyId() == facultyIdToAssign) {
+                                assignedFaculty = faculty;
+                                break;
+                            }
+                        }
+                        if (assignedFaculty != null) {
+                            course.setFaculty(assignedFaculty);
+                        } else {
+                            System.out.println("No faculty found with ID " + facultyIdToAssign);
+                        }
+                        System.out.println("Course updated successfully.");
+                    }
                 }
-            }
-
-            if (assignedFaculty == null) {
-                System.out.println("Faculty with ID " + facultyId + " not found.");
-            } else {
-                course.setCourseTitle(courseTitle);
-                course.setCredit(credit);
-                course.setFaculty(assignedFaculty);
-
-                System.out.println("Course information updated successfully.");
-            }
-            break; // Exit the loop once the course is found and updated
-                 }
-        }   
-
-    if (!courseFound) {
-        System.out.println("Course with ID " + courseIdToUpdate + " not found.");
-    }
-    break;
-
-
-                
+                break;
             case "c":
-                // System.out.print("Enter Faculty ID: ");
-                // int facultyId = Integer.parseInt(scanner.nextLine());
-                // System.out.print("Enter Faculty Name: ");
-                // String facultyName = scanner.nextLine();
-                // System.out.print("Enter Faculty Position: ");
-                // String facultyPosition = scanner.nextLine();
-                // faculties.add(new Faculty(facultyId, facultyName, facultyPosition));
-                // System.out.println("Faculty added successfully.");
-                System.out.print("Enter Faculty ID: ");
+                System.out.print("Enter Faculty ID to update: ");
                 int facultyIdToUpdate = Integer.parseInt(scanner.nextLine());
-                boolean facultyFound = false;
-
+                System.out.print("Enter new Faculty Name: ");
+                String facultyNameToUpdate = scanner.nextLine();
+                System.out.print("Enter new Faculty Position: ");
+                String facultyPositionToUpdate = scanner.nextLine();
                 for (Faculty faculty : faculties) {
                     if (faculty.getFacultyId() == facultyIdToUpdate) {
-                         facultyFound = true;
-
-                System.out.print("Enter updated Faculty Name: ");
-                String facultyName = scanner.nextLine();
-
-                System.out.print("Enter updated Faculty Position: ");
-                String facultyPosition = scanner.nextLine();
-
-                faculty.setFacultyName(facultyName);
-                faculty.setFacultyPosition(facultyPosition);
-
-            System.out.println("Faculty information updated successfully.");
-            break; // Exit the loop once the faculty is found and updated
-        }
-    }
-
-    if (!facultyFound) {
-        System.out.println("Faculty with ID " + facultyIdToUpdate + " not found.");
-    }
-    break;
+                        faculty = new Faculty(facultyIdToUpdate, facultyNameToUpdate, facultyPositionToUpdate);
+                        System.out.println("Faculty updated successfully.");
+                    }
+                }
+                break;
             default:
                 System.out.println("Invalid choice! Try again.");
         }
@@ -425,23 +364,98 @@ public class MenuApplication {
         System.out.println("a. Print all students");
         System.out.println("b. Print all courses");
         System.out.println("c. Print all faculties");
+        System.out.println("d. Print Student Information");
+        System.out.println("e. Print Faculty Information");
+        System.out.println("f. Print Student list and info of course");
+        System.out.println("g. Print Student list and Faculty information of course");
+        System.out.println("h. Print Courses taken by a student");
         System.out.print("Choose an option: ");
         String choice = scanner.nextLine();
 
         switch (choice) {
             case "a":
+                System.out.println("All Students:");
                 for (Student student : students) {
-                    student.display();
+                    System.out.println("  " + student.getStudentName() + " (ID: " + student.getStudentId() + ")");
                 }
                 break;
             case "b":
+                System.out.println("All Courses:");
                 for (Course course : courses) {
-                    course.display();
+                    System.out.println("  " + course.getCourseTitle() + " (Course ID: " + course.getCourseId() + ")");
                 }
                 break;
             case "c":
+                System.out.println("All Faculties:");
                 for (Faculty faculty : faculties) {
-                    faculty.display();
+                    System.out.println("  " + faculty.getFacultyName() + " (ID: " + faculty.getFacultyId() + ")");
+                }
+                break;
+            case "d":
+                System.out.print("Enter Student ID: ");
+                int studentIdToPrint = Integer.parseInt(scanner.nextLine());
+                for (Student student : students) {
+                    if (student.getStudentId() == studentIdToPrint) {
+                        System.out.println("Student Information:");
+                        System.out.println("  Name: " + student.getStudentName());
+                        System.out.println("  CGPA: " + student.getStudentCgpa());
+                    }
+                }
+                break;
+            case "e":
+                System.out.print("Enter Faculty ID: ");
+                int facultyIdToPrint = Integer.parseInt(scanner.nextLine());
+                for (Faculty faculty : faculties) {
+                    if (faculty.getFacultyId() == facultyIdToPrint) {
+                        System.out.println("Faculty Information:");
+                        System.out.println("  Name: " + faculty.getFacultyName());
+                        System.out.println("  Position: " + faculty.getFacultyPosition());
+                    }
+                }
+                break;
+            case "f":
+                System.out.print("Enter Course ID: ");
+                String courseIdToPrint = scanner.nextLine();
+                boolean courseFound = false;
+                for (Course course : courses) {
+                    if (course.getCourseId().equals(courseIdToPrint)) {
+                        courseFound = true;
+                        course.printCourseDetails(); // Print student list and faculty info
+                        break;
+                    }
+                }
+                if (!courseFound) {
+                    System.out.println("Course with ID " + courseIdToPrint + " not found.");
+                }
+                break;
+            case "g":
+                System.out.print("Enter the Course ID: ");
+                String courseIdToPrintG = scanner.nextLine();
+                boolean foundCourse = false;
+                for (Course course : courses) {
+                    if (course.getCourseId().equals(courseIdToPrintG)) {
+                        foundCourse = true;
+                        course.printCourseDetails();  // Will print student list and faculty info
+                        break;
+                    }
+                }
+                if (!foundCourse) {
+                    System.out.println("Course not found.");
+                }
+                break;
+            case "h":
+                System.out.print("Enter Student ID: ");
+                int studentIdToPrintH = Integer.parseInt(scanner.nextLine());
+                boolean foundStudent = false;
+                for (Student student : students) {
+                    if (student.getStudentId() == studentIdToPrintH) {
+                        foundStudent = true;
+                        student.printCourses();  // Print the courses for the student
+                        break;
+                    }
+                }
+                if (!foundStudent) {
+                    System.out.println("Student not found.");
                 }
                 break;
             default:
@@ -450,6 +464,43 @@ public class MenuApplication {
     }
 
     private static void searchEntity() {
-        System.out.println("Search is not implemented yet.");
+        System.out.println("Search:");
+        System.out.println("a. Search a Student");
+        System.out.println("b. Search a Course");
+        System.out.println("c. Search a Faculty");
+        System.out.print("Choose an option: ");
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "a":
+                System.out.print("Enter Student ID to search: ");
+                int studentIdToSearch = Integer.parseInt(scanner.nextLine());
+                for (Student student : students) {
+                    if (student.getStudentId() == studentIdToSearch) {
+                        System.out.println("Student found: " + student.getStudentName());
+                    }
+                }
+                break;
+            case "b":
+                System.out.print("Enter Course ID to search: ");
+                String courseIdToSearch = scanner.nextLine();
+                for (Course course : courses) {
+                    if (course.getCourseId().equals(courseIdToSearch)) {
+                        System.out.println("Course found: " + course.getCourseTitle());
+                    }
+                }
+                break;
+            case "c":
+                System.out.print("Enter Faculty ID to search: ");
+                int facultyIdToSearch = Integer.parseInt(scanner.nextLine());
+                for (Faculty faculty : faculties) {
+                    if (faculty.getFacultyId() == facultyIdToSearch) {
+                        System.out.println("Faculty found: " + faculty.getFacultyName());
+                    }
+                }
+                break;
+            default:
+                System.out.println("Invalid choice! Try again.");
+        }
     }
 }
